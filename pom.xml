@@ -17,11 +17,12 @@
 
 	<!--子模块工厂配置-->
 	<modules>
-		<module>singledatasource</module>
-		<module>mutidatasource</module>
+		<module>config</module>
 		<module>eureka</module>
 		<module>gateway</module>
 		<module>common</module>
+		<module>singledatasource</module>
+		<module>mutidatasource</module>
 	</modules>
 
 	<properties>
