@@ -12,8 +12,8 @@ spring:
         git:
           uri: https://github.com/huangjianven/springclouddemo.git
 # 访问git仓库的用户密码 如果Git仓库为公开仓库，可以不填写用户名和密码，如果是私有仓库需要填写
-#          username: ******
-#          password: *****
+          username: huangjianven
+          password: h2011010097
 #          basedir: /Users/admin/code/myProjects/java/imooc/SpringCloud_Sell/config/basedir
           search-paths: config-repo
 server:
