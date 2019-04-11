@@ -4,16 +4,22 @@ spring:
   application:
     # 注册时的服务ID
     name: gateway
-zuul:
-  #全部服务忽略敏感头(全部服务都可以传递cookie)
-  sensitive-headers:
-  routes:
-    mutidatasource:
-      path: /muti/**
-      serviceId: mutidatasource
-      sensitiveHeaders:
-  #简洁写法
-    singledatasource: /single/**
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: CONFIG
+      profile: dev
+#zuul:
+#  #全部服务忽略敏感头(全部服务都可以传递cookie)
+#  sensitive-headers:
+#  routes:
+#    mutidatasource:
+#      path: /muti/**
+#      serviceId: mutidatasource
+#      sensitiveHeaders:
+#  #简洁写法
+#    singledatasource: /single/**
   #排除某些路由
 #  ignored-patterns:
 #    - /**/product/listForOrder

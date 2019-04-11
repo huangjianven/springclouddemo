@@ -1,9 +1,3 @@
-server:
-  port: 7777
-spring:
-  application:
-    # 注册时的服务ID
-    name: gateway
 zuul:
   #全部服务忽略敏感头(全部服务都可以传递cookie)
   sensitive-headers:
@@ -14,9 +8,3 @@ zuul:
       sensitiveHeaders:
   #简洁写法
     singledatasource: /single/**
-  #排除某些路由
-#  ignored-patterns:
-#    - /**/product/listForOrder
-ribbon:
-  ReadTimeout: 5000
-  SocketTimeout: 5000
