@@ -1,6 +1,5 @@
 package com.example.singledatasource;
 
-import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,7 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableFeignClients
 @EnableEurekaClient
 @EnableCircuitBreaker
-@SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
+@SpringBootApplication
 public class SingleDatasourceApplication {
 
 	public static void main(String[] args) {
