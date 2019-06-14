@@ -9,20 +9,18 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>springclouddemo</artifactId>
+	<artifactId>travel_business</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>springclouddemo</name>
+	<name>travel_business</name>
 	<packaging>pom</packaging>
 	<description>Demo project for Spring Boot</description>
 
 	<!--子模块工厂配置-->
 	<modules>
-		<module>config</module>
 		<module>eureka</module>
 		<module>gateway</module>
 		<module>common</module>
-		<module>singledatasource</module>
-		<module>mutidatasource</module>
+		<module>travelBusiness</module>
 	</modules>
 
 	<properties>
