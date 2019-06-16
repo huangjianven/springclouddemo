@@ -1,6 +1,14 @@
 server:
   port: 9999
+eureka:
+  client:
+    serviceUrl:
+      # 根据实际的注册发现地址添加，如果存在多个，使用逗号隔开/eureka/
+      defaultZone: http://localhost:8761/eureka/
 spring:
+  application:
+    # 注册时的服务ID
+    name: travelBusiness
   redis:
     database: 0
     lettuce:

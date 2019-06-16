@@ -1,4 +1,4 @@
-package com.tengyun.exception;
+package com.tengyun.common.exception;
 
 import lombok.Builder;
 import lombok.Getter;

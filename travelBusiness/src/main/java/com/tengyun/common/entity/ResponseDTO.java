@@ -1,4 +1,4 @@
-package com.tengyun.entity;
+package com.tengyun.common.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Builder;

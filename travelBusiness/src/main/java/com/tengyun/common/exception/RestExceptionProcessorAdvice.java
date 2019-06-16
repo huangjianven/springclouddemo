@@ -1,6 +1,6 @@
-package com.tengyun.exception;
+package com.tengyun.common.exception;
 
-import com.tengyun.entity.ResponseDTO;
+import com.tengyun.common.entity.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;

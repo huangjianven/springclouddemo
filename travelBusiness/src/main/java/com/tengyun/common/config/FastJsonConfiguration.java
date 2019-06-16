@@ -1,4 +1,4 @@
-package com.tengyun.config;
+package com.tengyun.common.config;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
