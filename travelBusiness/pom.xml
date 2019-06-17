@@ -61,6 +61,18 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis-plus.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>4.5.11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.tengyun</groupId>
+            <artifactId>common-result</artifactId>
+            <version>0.0.1.RELEASE</version>
+        </dependency>
 	</dependencies>
 
 

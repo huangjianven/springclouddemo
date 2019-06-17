@@ -2,6 +2,7 @@ server:
   port: 9999
 eureka:
   client:
+    enabled: false
     serviceUrl:
       # 根据实际的注册发现地址添加，如果存在多个，使用逗号隔开/eureka/
       defaultZone: http://localhost:8761/eureka/
@@ -17,14 +18,15 @@ spring:
         max-wait: -1ms
         max-idle: 8
         min-idle: 0
-    host: localhost
+    host: cfwpt.ybsjyyn.com
     port: 6379
+    password: Larry*redis
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://huangjianven:3306/test?useSSL=false&createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2B8
+    url: jdbc:mysql://118.89.22.119:3306/travel_business?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: root
-    password: 123456
+    password: Larry@mysql
 mybatis-plus:
   mapper-locations: classpath*:com/example/entity/business/**/*.xml
 logging:

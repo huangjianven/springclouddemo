@@ -68,7 +68,7 @@ public class UserController {
      * @param code JSCODE
      * @return 新增结果
      */
-    @PostMapping("login")
+    @RequestMapping("login")
     public ResponseDTO login(@RequestParam String code) {
         return this.userService.login(code);
     }
