@@ -8,7 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
-    <artifactId>singledatasource</artifactId>
+    <artifactId>travelBusiness</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>travelBusiness</name>
 	<description>Demo project for Spring Boot</description>
