@@ -2,7 +2,9 @@ package com.tengyun.business.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tengyun.business.entity.User;
-import com.tengyun.common.entity.ResponseDTO;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * 用户表(User)表服务接口
@@ -12,7 +14,7 @@ import com.tengyun.common.entity.ResponseDTO;
  */
 public interface UserService extends IService<User> {
 
-    ResponseDTO login(String code);
+    void login(String code, HttpServletResponse response) throws IOException;
 
-    ResponseDTO verification(String phone);
+    void verification(String phone);
 }

@@ -11,4 +11,5 @@ import com.tengyun.business.entity.User;
  */
 public interface UserMapper extends BaseMapper<User> {
 
+    User getDetailByOpenId(String openId);
 }

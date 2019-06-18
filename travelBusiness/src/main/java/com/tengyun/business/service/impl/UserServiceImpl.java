@@ -2,16 +2,18 @@ package com.tengyun.business.service.impl;
 
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tengyun.business.dao.UserMapper;
 import com.tengyun.business.entity.User;
+import com.tengyun.business.service.OBTService;
 import com.tengyun.business.service.UserService;
-import com.tengyun.common.constant.WxConfig;
-import com.tengyun.common.entity.ResponseDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -24,32 +26,42 @@ import java.util.HashMap;
 @Transactional(rollbackFor = Exception.class)
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
+    @Value("${weixin.appid}")
+    private String appid;
+    @Value("${weixin.secret}")
+    private String secret;
+    @Value("${weixin.openid-url}")
+    private String openidUrl;
+    @Resource
+    private OBTService OBTService;
+
     @Override
-    public ResponseDTO login(String code) {
+    public void login(String code, HttpServletResponse response) throws IOException {
         String openId = getOpenId(code);
-        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-        userQueryWrapper.eq("open_id", openId);
-        User user = this.getOne(userQueryWrapper);
-        if (user == null) {
-            return ResponseDTO.failed(403, "用户未绑定");
+        User user = baseMapper.getDetailByOpenId(openId);
+        if (user != null) {
+            response.sendRedirect("http://localhost:8080");
+        } else {
+            String token = OBTService.getToken(user.getCompany());
+            user.getCompany().setToken(token);
+            OBTService.autoLogin(user, response);
         }
-        return null;
     }
 
     @Override
-    public ResponseDTO verification(String phone) {
-        return null;
+    public void verification(String phone) {
+
     }
 
     public String getOpenId(String code) {
         HashMap<String, Object> paramMap = new HashMap<>();
-        paramMap.put("appid", WxConfig.APPID);
-        paramMap.put("secret", WxConfig.SECRET);
+        paramMap.put("appid", appid);
+        paramMap.put("secret", secret);
         paramMap.put("js_code", code);
         paramMap.put("grant_type", "authorization_code");
-        String s = HttpUtil.get(WxConfig.JSCODE2SESSION, paramMap);
+        String s = HttpUtil.get(openidUrl, paramMap);
         JSONObject object = JSONObject.parseObject(s);
-        return object.getString("openId");
+        return object.getString("openid");
     }
 
 }

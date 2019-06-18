@@ -1,17 +1,18 @@
 package com.tengyun.business.controller;
 
 
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tengyun.business.entity.User;
 import com.tengyun.business.service.UserService;
-import com.tengyun.common.entity.ResponseDTO;
+import com.tengyun.data.Result;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 用户表(User)表控制层
@@ -29,6 +30,39 @@ public class UserController {
     private UserService userService;
 
     /**
+     * 登陆
+     *
+     * @param code JSCODE
+     * @return 新增结果
+     */
+    @RequestMapping("login")
+    public void login(@RequestParam String code, HttpServletResponse response) throws IOException {
+        this.userService.login(code, response);
+    }
+
+//    /**
+//     * 绑定
+//     *
+//     * @param code 验证码
+//     * @return 新增结果
+//     */
+//    @PostMapping("bind")
+//    public ResponseDTO bind(@RequestParam String code) {
+//        return this.userService.login(code);
+//    }
+//
+//    /**
+//     * 获取验证码
+//     *
+//     * @param phone 电话号码
+//     * @return 新增结果
+//     */
+//    @PostMapping("verification")
+//    public ResponseDTO verification(@RequestParam String phone) {
+//        return this.userService.verification(phone);
+//    }
+
+    /**
      * 分页查询所有数据
      *
      * @param page 分页对象
@@ -36,8 +70,9 @@ public class UserController {
      * @return 所有数据
      */
     @GetMapping("list")
-    public ResponseDTO selectAll(Page<User> page, User user) {
-        return ResponseDTO.success(this.userService.page(page, new QueryWrapper<>(user)));
+    public Result<IPage<User>> selectAll(Page<User> page, User user) {
+
+        return Result.success(this.userService.page(page, new QueryWrapper<>(user)));
     }
 
     /**
@@ -47,10 +82,10 @@ public class UserController {
      * @return 单条数据
      */
     @GetMapping
-    public ResponseDTO selectOne(@RequestParam Serializable id) {
-        return ResponseDTO.success(this.userService.getById(id));
+    public Result<User> selectOne(@RequestParam Serializable id) {
+        return Result.success(this.userService.getById(id));
     }
-
+//
     /**
      * 新增数据
      *
@@ -58,41 +93,8 @@ public class UserController {
      * @return 新增结果
      */
     @PostMapping
-    public ResponseDTO insert(@RequestBody User user) {
-        return ResponseDTO.success(this.userService.save(user));
-    }
-
-    /**
-     * 登陆
-     *
-     * @param code JSCODE
-     * @return 新增结果
-     */
-    @RequestMapping("login")
-    public ResponseDTO login(@RequestParam String code) {
-        return this.userService.login(code);
-    }
-
-    /**
-     * 绑定
-     *
-     * @param code 验证码
-     * @return 新增结果
-     */
-    @PostMapping("bind")
-    public ResponseDTO bind(@RequestParam String code) {
-        return this.userService.login(code);
-    }
-
-    /**
-     * 获取验证码
-     *
-     * @param phone 电话号码
-     * @return 新增结果
-     */
-    @PostMapping("verification")
-    public ResponseDTO verification(@RequestParam String phone) {
-        return this.userService.verification(phone);
+    public Result<Boolean> insert(@RequestBody User user) {
+        return Result.success(this.userService.save(user));
     }
 
     /**
@@ -102,18 +104,18 @@ public class UserController {
      * @return 修改结果
      */
     @PutMapping
-    public ResponseDTO update(@RequestBody User user) {
-        return ResponseDTO.success(this.userService.updateById(user));
+    public Result<Boolean> update(@RequestBody User user) {
+        return Result.success(this.userService.updateById(user));
     }
 
     /**
      * 删除数据
      *
-     * @param ids 主键结合
      * @return 删除结果
      */
     @DeleteMapping
-    public ResponseDTO delete(@RequestParam("ids") List<String> ids) {
-        return ResponseDTO.success(this.userService.removeByIds(ids));
+    public Result<Boolean> delete(@RequestBody User user) {
+        user = this.userService.getById(user.getId());
+        return Result.success(this.userService.updateById(user));
     }
 }

@@ -3,6 +3,7 @@ package com.tengyun.common.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tengyun.exception.ExceptionHandler;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -58,5 +59,10 @@ public class BeanConfiguration {
     @LoadBalanced //通过服务名访问一定要加LoadBalanced
     public RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+
+    @Bean
+    public ExceptionHandler exceptionHandler(){
+        return new ExceptionHandler();
     }
 }

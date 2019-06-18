@@ -3,15 +3,15 @@ package com.tengyun.business.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tengyun.business.entity.Company;
 import com.tengyun.business.service.CompanyService;
-import com.tengyun.common.entity.ResponseDTO;
+import com.tengyun.data.Result;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 公司(Company)表控制层
@@ -36,8 +36,9 @@ public class CompanyController {
      * @return 所有数据
      */
     @GetMapping("list")
-    public ResponseDTO selectAll(Page<Company> page, Company company) {
-        return ResponseDTO.success(this.companyService.page(page, new QueryWrapper<>(company)));
+    public Result<IPage<Company>> selectAll(Page<Company> page, Company company) {
+
+        return Result.success(this.companyService.page(page, new QueryWrapper<>(company)));
     }
 
     /**
@@ -47,10 +48,10 @@ public class CompanyController {
      * @return 单条数据
      */
     @GetMapping
-    public ResponseDTO selectOne(@RequestParam Serializable id) {
-        return ResponseDTO.success(this.companyService.getById(id));
+    public Result<Company> selectOne(@RequestParam Serializable id) {
+        return Result.success(this.companyService.getById(id));
     }
-
+//
     /**
      * 新增数据
      *
@@ -58,8 +59,8 @@ public class CompanyController {
      * @return 新增结果
      */
     @PostMapping
-    public ResponseDTO insert(@RequestBody Company company) {
-        return ResponseDTO.success(this.companyService.save(company));
+    public Result<Boolean> insert(@RequestBody Company company) {
+        return Result.success(this.companyService.save(company));
     }
 
     /**
@@ -69,18 +70,18 @@ public class CompanyController {
      * @return 修改结果
      */
     @PutMapping
-    public ResponseDTO update(@RequestBody Company company) {
-        return ResponseDTO.success(this.companyService.updateById(company));
+    public Result<Boolean> update(@RequestBody Company company) {
+        return Result.success(this.companyService.updateById(company));
     }
 
     /**
      * 删除数据
      *
-     * @param ids 主键结合
      * @return 删除结果
      */
     @DeleteMapping
-    public ResponseDTO delete(@RequestParam("ids") List<String> ids) {
-        return ResponseDTO.success(this.companyService.removeByIds(ids));
+    public Result<Boolean> delete(@RequestBody Company company) {
+        company = this.companyService.getById(company.getId());
+        return Result.success(this.companyService.updateById(company));
     }
 }

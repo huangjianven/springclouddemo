@@ -1,6 +1,6 @@
 package com.tengyun.common.exception;
 
-import com.tengyun.common.entity.ResponseDTO;
+import com.tengyun.data.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -33,12 +33,13 @@ public class RestExceptionProcessorAdvice {
 
     /**
      * 业务异常
+     * @return
      */
     @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
     @ExceptionHandler(BusinessException.class)
-    public ResponseDTO handleBusinessException(BusinessException e) {
+    public Result<Void> handleBusinessException(BusinessException e) {
         log.warn("业务异常:{}", e.getErrorMessage());
-        return ResponseDTO.failed(e.getErrorCode(), e.getErrorMessage());
+        return Result.fail(e.getErrorCode(), e.getErrorMessage());
     }
 
 
@@ -47,10 +48,10 @@ public class RestExceptionProcessorAdvice {
      */
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseDTO handleNoHandlerFoundException(NoHandlerFoundException e) {
+    public Result<Void> handleNoHandlerFoundException(NoHandlerFoundException e) {
         String errorMsg = "无法找到资源:" + e.getRequestURL();
         log.warn(errorMsg, e);
-        return ResponseDTO.failed(HttpServletResponse.SC_NOT_FOUND, errorMsg);
+        return Result.fail(HttpServletResponse.SC_NOT_FOUND, errorMsg);
     }
 
     /**
@@ -58,10 +59,10 @@ public class RestExceptionProcessorAdvice {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseDTO handleMissingRequestParameterException(MissingServletRequestParameterException e) {
+    public Result<Void> handleMissingRequestParameterException(MissingServletRequestParameterException e) {
         String errorMsg = "缺少请求参数:" + e.getParameterName();
         log.warn(errorMsg, e);
-        return ResponseDTO.failed(HttpServletResponse.SC_BAD_REQUEST, errorMsg);
+        return Result.fail(HttpServletResponse.SC_BAD_REQUEST, errorMsg);
     }
 
     /**
@@ -69,10 +70,10 @@ public class RestExceptionProcessorAdvice {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseDTO handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+    public Result<Void> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         String errorMsg = "参数解析失败:" + e.getMessage();
         log.warn(errorMsg, e);
-        return ResponseDTO.failed(HttpServletResponse.SC_BAD_REQUEST, errorMsg);
+        return Result.fail(HttpServletResponse.SC_BAD_REQUEST, errorMsg);
     }
 
     /**
@@ -80,14 +81,14 @@ public class RestExceptionProcessorAdvice {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseDTO handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public Result<Void> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         BindingResult result = e.getBindingResult();
         FieldError error = result.getFieldError();
         String field = error.getField();
         String code = error.getDefaultMessage();
         String errorMsg = "参数验证失败:" + String.format("%s:%s", field, code);
         log.warn(errorMsg, e);
-        return ResponseDTO.failed(HttpServletResponse.SC_BAD_REQUEST, errorMsg);
+        return Result.fail(HttpServletResponse.SC_BAD_REQUEST, errorMsg);
     }
 
     /**
@@ -95,14 +96,14 @@ public class RestExceptionProcessorAdvice {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BindException.class)
-    public ResponseDTO handleBindException(BindException e) {
+    public Result<Void> handleBindException(BindException e) {
         BindingResult result = e.getBindingResult();
         FieldError error = result.getFieldError();
         String field = error.getField();
         String code = error.getDefaultMessage();
         String errorMsg = "参数绑定失败:" + String.format("%s:%s", field, code);
         log.warn(errorMsg, e);
-        return ResponseDTO.failed(HttpServletResponse.SC_BAD_REQUEST, errorMsg);
+        return Result.fail(HttpServletResponse.SC_BAD_REQUEST, errorMsg);
     }
 
 
@@ -111,13 +112,13 @@ public class RestExceptionProcessorAdvice {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseDTO handleServiceException(ConstraintViolationException e) {
+    public Result<Void> handleServiceException(ConstraintViolationException e) {
 
         Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
         ConstraintViolation<?> violation = violations.iterator().next();
         String errorMsg = "参数验证失败:" + violation.getMessage();
         log.warn(errorMsg, e);
-        return ResponseDTO.failed(HttpServletResponse.SC_BAD_REQUEST, errorMsg);
+        return Result.fail(HttpServletResponse.SC_BAD_REQUEST, errorMsg);
     }
 
 
@@ -126,10 +127,10 @@ public class RestExceptionProcessorAdvice {
      */
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseDTO handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+    public Result<Void> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         String errorMsg = "不支持当前请求方法:" + e.getMethod();
         log.warn(errorMsg, e);
-        return ResponseDTO.failed(HttpServletResponse.SC_METHOD_NOT_ALLOWED, errorMsg);
+        return Result.fail(HttpServletResponse.SC_METHOD_NOT_ALLOWED, errorMsg);
     }
 
     /**
@@ -137,10 +138,10 @@ public class RestExceptionProcessorAdvice {
      */
     @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    public ResponseDTO handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e) {
+    public Result<Void> handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e) {
         String errorMsg = "媒体类型不支持:" + e.getContentType();
         log.warn(errorMsg, e);
-        return ResponseDTO.failed(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, errorMsg);
+        return Result.fail(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, errorMsg);
     }
 
     /**
@@ -148,9 +149,9 @@ public class RestExceptionProcessorAdvice {
      */
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Throwable.class)
-    public ResponseDTO handleThrowableException(Throwable e) {
+    public Result<Void> handleThrowableException(Throwable e) {
         String errorMsg = "系统出错!请联系管理员.";
         log.error("系统出错:" + e.getMessage(), e);
-        return ResponseDTO.failed(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorMsg);
+        return Result.fail(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorMsg);
     }
 }
