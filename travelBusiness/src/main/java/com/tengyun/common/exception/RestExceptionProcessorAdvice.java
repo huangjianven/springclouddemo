@@ -35,7 +35,6 @@ public class RestExceptionProcessorAdvice {
      * 业务异常
      * @return
      */
-    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
     @ExceptionHandler(BusinessException.class)
     public Result<Void> handleBusinessException(BusinessException e) {
         log.warn("业务异常:{}", e.getErrorMessage());

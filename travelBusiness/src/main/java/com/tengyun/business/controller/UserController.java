@@ -40,16 +40,34 @@ public class UserController {
         this.userService.login(code, response);
     }
 
-//    /**
-//     * 绑定
-//     *
-//     * @param code 验证码
-//     * @return 新增结果
-//     */
-//    @PostMapping("bind")
-//    public ResponseDTO bind(@RequestParam String code) {
-//        return this.userService.login(code);
-//    }
+    @RequestMapping("autoLogin")
+    public void autoLogin(@RequestParam String uid, HttpServletResponse response) throws IOException {
+        this.userService.autoLogin(uid, response);
+    }
+
+    /**
+     * 发送验证码
+     *
+     * @param phone
+     * @return 新增结果
+     */
+    @RequestMapping("send")
+    public Result<Boolean> send(@RequestParam String phone) throws IOException {
+        this.userService.send(phone);
+        return Result.success(true);
+    }
+
+    /**
+     * 绑定
+     *
+     * @param code 验证码
+     * @return 新增结果
+     */
+    @GetMapping("bind")
+    public Result<Boolean> bind(@RequestParam String uid,@RequestParam String phone,@RequestParam String code) {
+        this.userService.bind(uid,phone,code);
+        return Result.success(true);
+    }
 //
 //    /**
 //     * 获取验证码
@@ -86,6 +104,7 @@ public class UserController {
         return Result.success(this.userService.getById(id));
     }
 //
+
     /**
      * 新增数据
      *

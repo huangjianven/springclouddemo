@@ -22,4 +22,25 @@
                            on u.companyAccount = c.account
         where u.open_id = #{openId};
     </select>
+    <select id="getDetailByPhone" resultType="com.tengyun.business.entity.User">
+        select u.id,
+               u.open_id,
+               u.phone,
+               u.name,
+               u.password,
+               u.companyAccount,
+               u.state,
+               u.type,
+               u.parid,
+               u.account,
+               c.id           AS 'company.id',
+               c.name         AS 'company.name',
+               c.account      AS 'company.account',
+               c.app_security AS 'company.app_security',
+               c.app_key      AS 'company.app_key'
+        from travel_business.user u
+                 left join company c
+                           on u.companyAccount = c.account
+        where u.phone = #{phone};
+    </select>
 </mapper>

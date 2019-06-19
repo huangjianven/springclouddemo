@@ -16,5 +16,10 @@ public interface UserService extends IService<User> {
 
     void login(String code, HttpServletResponse response) throws IOException;
 
-    void verification(String phone);
+
+    void autoLogin(String uid, HttpServletResponse response) throws IOException;
+
+    void bind(String uid, String phone, String code);
+
+    void send(String phone);
 }
