@@ -37,6 +37,11 @@ weixin:
   appid: wxaf7350f9e8ebef8b
   secret: 92418e69646606b18d031f7cb06f7712
   openid-url: https://api.weixin.qq.com/sns/jscode2session
-obt:
+obt:    # obt接口地址
   url: http://bluesky.travelsky.com/online/
+web-index: http://localhost:8080/#/    # 没有绑定跳转前端首页
+msg:    # 短信模板
+  appid: 1400222019
+  appkey: 7ae176181ed9ffc6a2fd7983a97a4200
+  templateId: 356043
 

@@ -42,6 +42,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private String secret;
     @Value("${weixin.openid-url}")
     private String openidUrl;
+    @Value("${web-index}")
+    private String webIndex;
+    @Value("${msg.appid}")
+    private int msgAppid;
+    @Value("${msg.appkey}")
+    private String msgAppkey;
+    @Value("${msg.templateId}")
+    private int msgTemplateId;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Resource
@@ -51,10 +59,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void login(String code, HttpServletResponse response) throws IOException {
         String openId = getOpenId(code);
         User user = baseMapper.getDetailByOpenId(openId);
-        if (user == null) {
+        if (user != null) {
             String uid = UUID.fastUUID().toString(true);
             stringRedisTemplate.opsForValue().set(uid, openId);
-            response.sendRedirect("http://localhost:8080/#/?uid=" + uid);
+            response.sendRedirect(webIndex + "?uid=" + uid);
         } else {
             String token = OBTService.getToken(user.getCompany());
             user.getCompany().setToken(token);
@@ -87,11 +95,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void send(String phone) throws HTTPException, IOException {
         User user = baseMapper.getDetailByPhone(phone);
         if (user == null) {
-            throw BusinessException.message("没有查到相关信息");
+            throw BusinessException.message("没有查到相关信息",403);
+        }
+        if (user.getState() != 1) {
+            throw BusinessException.message("该用户不可用");
+        }
+        if (user.getOpenId() != null) {
+            throw BusinessException.message("该号码已绑定其他用户");
         }
         int randomInt = RandomUtil.randomInt(1000, 9999);
         SmsSingleSenderResult smsSingleSenderResult = sendMsg(phone, String.valueOf(randomInt));
-        if (smsSingleSenderResult.result == 0) {
+        if (smsSingleSenderResult.result != 0) {
             throw BusinessException.message("验证码发送失败");
         }
         stringRedisTemplate.opsForValue().set("verification_" + phone, String.valueOf(randomInt), 5L, TimeUnit.MINUTES);
@@ -109,14 +123,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     SmsSingleSenderResult sendMsg(String phoneNumber, String code) throws HTTPException, IOException {
-        int appid = 1400222019;
-        String appkey = "7ae176181ed9ffc6a2fd7983a97a4200";
-        int templateId = 356043;
-        SmsSingleSender ssender = new SmsSingleSender(appid, appkey);
+        SmsSingleSender ssender = new SmsSingleSender(msgAppid, msgAppkey);
         ArrayList<String> params = new ArrayList<>();
         params.add(code);
         params.add("5");
-        return ssender.sendWithParam("86", phoneNumber, templateId, params, null, "", "");
+        return ssender.sendWithParam("86", phoneNumber, msgTemplateId, params, null, "", "");
     }
 
 }

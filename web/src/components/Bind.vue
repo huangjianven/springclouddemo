@@ -116,8 +116,16 @@
               setTimeout(() => {
                 that.showSend = false;
               }, 1000);
+            } else if (response.data.errorcode === 403) {
+              that.showSend = false;
+              that.showTip = true;
             } else {
               that.showTip = false;
+              that.showSend = true;
+              that.sendTip = response.data.msg;
+              setTimeout(() => {
+                that.showSend = false;
+              }, 1000);
             }
           });
       },
