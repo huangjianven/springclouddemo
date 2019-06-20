@@ -59,7 +59,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void login(String code, HttpServletResponse response) throws IOException {
         String openId = getOpenId(code);
         User user = baseMapper.getDetailByOpenId(openId);
-        if (user != null) {
+        if (user == null) {
             String uid = UUID.fastUUID().toString(true);
             stringRedisTemplate.opsForValue().set(uid, openId);
             response.sendRedirect(webIndex + "?uid=" + uid);
