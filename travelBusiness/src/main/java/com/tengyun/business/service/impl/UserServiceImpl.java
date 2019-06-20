@@ -4,8 +4,10 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.qcloudsms.SmsSingleSender;
+import com.github.qcloudsms.SmsSingleSenderResult;
+import com.github.qcloudsms.httpclient.HTTPException;
 import com.tengyun.business.dao.UserMapper;
 import com.tengyun.business.entity.User;
 import com.tengyun.business.service.OBTService;
@@ -20,7 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 用户表(User)表服务实现类
@@ -47,10 +51,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void login(String code, HttpServletResponse response) throws IOException {
         String openId = getOpenId(code);
         User user = baseMapper.getDetailByOpenId(openId);
-        if (user != null) {
+        if (user == null) {
             String uid = UUID.fastUUID().toString(true);
             stringRedisTemplate.opsForValue().set(uid, openId);
-            response.sendRedirect("http://localhost:8080/#/?uid="+uid);
+            response.sendRedirect("http://localhost:8080/#/?uid=" + uid);
         } else {
             String token = OBTService.getToken(user.getCompany());
             user.getCompany().setToken(token);
@@ -80,13 +84,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public void send(String phone) {
+    public void send(String phone) throws HTTPException, IOException {
         User user = baseMapper.getDetailByPhone(phone);
         if (user == null) {
             throw BusinessException.message("没有查到相关信息");
         }
-        int randomInt = RandomUtil.randomInt(100000, 999999);
-        stringRedisTemplate.opsForValue().set("verification_"+phone, String.valueOf(randomInt));
+        int randomInt = RandomUtil.randomInt(1000, 9999);
+        SmsSingleSenderResult smsSingleSenderResult = sendMsg(phone, String.valueOf(randomInt));
+        if (smsSingleSenderResult.result == 0) {
+            throw BusinessException.message("验证码发送失败");
+        }
+        stringRedisTemplate.opsForValue().set("verification_" + phone, String.valueOf(randomInt), 5L, TimeUnit.MINUTES);
     }
 
     public String getOpenId(String code) {
@@ -98,6 +106,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String s = HttpUtil.get(openidUrl, paramMap);
         JSONObject object = JSONObject.parseObject(s);
         return object.getString("openid");
+    }
+
+    SmsSingleSenderResult sendMsg(String phoneNumber, String code) throws HTTPException, IOException {
+        int appid = 1400222019;
+        String appkey = "7ae176181ed9ffc6a2fd7983a97a4200";
+        int templateId = 356043;
+        SmsSingleSender ssender = new SmsSingleSender(appid, appkey);
+        ArrayList<String> params = new ArrayList<>();
+        params.add(code);
+        params.add("5");
+        return ssender.sendWithParam("86", phoneNumber, templateId, params, null, "", "");
     }
 
 }

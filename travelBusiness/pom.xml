@@ -73,6 +73,12 @@
             <artifactId>common-result</artifactId>
             <version>0.0.1.RELEASE</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.qcloudsms</groupId>
+            <artifactId>qcloudsms</artifactId>
+            <version>1.0.6</version>
+        </dependency>
 	</dependencies>
 
 

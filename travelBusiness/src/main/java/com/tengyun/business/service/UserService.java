@@ -1,6 +1,7 @@
 package com.tengyun.business.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.qcloudsms.httpclient.HTTPException;
 import com.tengyun.business.entity.User;
 
 import javax.servlet.http.HttpServletResponse;
@@ -21,5 +22,5 @@ public interface UserService extends IService<User> {
 
     void bind(String uid, String phone, String code);
 
-    void send(String phone);
+    void send(String phone) throws HTTPException, IOException;
 }

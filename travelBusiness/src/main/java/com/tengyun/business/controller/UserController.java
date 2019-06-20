@@ -4,6 +4,7 @@ package com.tengyun.business.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.qcloudsms.httpclient.HTTPException;
 import com.tengyun.business.entity.User;
 import com.tengyun.business.service.UserService;
 import com.tengyun.data.Result;
@@ -52,7 +53,7 @@ public class UserController {
      * @return 新增结果
      */
     @RequestMapping("send")
-    public Result<Boolean> send(@RequestParam String phone) throws IOException {
+    public Result<Boolean> send(@RequestParam String phone) throws IOException, HTTPException {
         this.userService.send(phone);
         return Result.success(true);
     }
